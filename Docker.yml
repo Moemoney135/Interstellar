@@ -1,0 +1,58 @@
+# Credits
+- <@1267238412302159977>
+- <@1053443057451794585> 
+- <@726162926851063919>
+# Prerequisites
+- You must have a Github Account: If you don't signup [here](https://github.com/signup).
+- You must have a fork of Interstellar: If you don't have a fork, fork it [here](https://github.com/UseInterstellar/Interstellar/fork).
+- You must have a credit/debit card to verify on Render, before deploying.
+# Github Steps
+If you have not already forked Interstellar, you can fork it [here](https://github.com/UseInterstellar/Interstellar/fork), or on Mobile click Settings or "...".
+1. On your fork go to ``.github/workflows``
+2. Create a file called ``docker.yml``
+3. Put this code inside the file and then save it: 
+```name: Publish image to Docker Hub
+on:
+  [workflow_dispatch]
+
+jobs:
+
+  docker:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Log in to the Container registry
+      uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+      with:
+       registry: ghcr.io
+       username: ${{ github.actor }}
+       password: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: |
+          docker build . -t ghcr.io/$(echo ${{github.actor}} | tr '[:upper:]' '[:lower:]')/interstellar-docker;
+          docker push ghcr.io/$(echo ${{github.actor}} | tr '[:upper:]' '[:lower:]')/interstellar-docker;```
+4. Then click "Actions"
+5. Click "Publish image to Docker Hub"
+6. Click "Run Workflow", and click "Run Workflow" again.
+7. Refresh and wait until the workflow is completed.
+8. Go to https://github.com/YOUR_USERNAME/REPO_NAME/packages
+9. Go to "Install from the command line", and copy the whole ``gchr.io`` link.
+# Render Steps
+If you have not already created an account you can create one [here](https://render.com/)
+
+If you do not have an email to create an account with, you can use one of the following temp mail sites:
+- https://smailpro.com/
+- https://temp-mail.io/
+
+1. Go to https://dashboard.render.com/web/new
+2. Click "Existing Image" , and paste your ``gchr.io`` link.
+3. You can customize the name, region, and plan before continuing. 
+4. Make sure you have choosen the Free Plan unless you want to pay a monthly fee.
+5. Then click Deploy Web Service
+6. Add your credit/debit card information
+7. Once adding the card wait for the deployment to complete, then you will have a working ``onrender.com`` link.
